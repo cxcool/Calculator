@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var displayValue: UILabel!
     
     var isUserFirstInput = true
+    
     @IBAction func digit(sender: UIButton) {
         let digit = sender.currentTitle!
         if isUserFirstInput{
@@ -22,8 +23,8 @@ class ViewController: UIViewController {
             displayValue.text = displayValue.text! + digit
         }
     }
-    var numberStack = Array<Double>()
     
+    var numberStack = [Double]()
     @IBAction func enter() {
         let displayValueDouble: Double = NSNumberFormatter().numberFromString(displayValue.text!)!.doubleValue
         numberStack.append(displayValueDouble)
@@ -31,31 +32,26 @@ class ViewController: UIViewController {
         print(displayValueDouble)
     }
     
-    func mutiply(op1: Double, op2: Double) -> Double{
-        return op1*op2
-    }
-    func add(op1: Double, op2: Double) -> Double{
-        return op1+op2
-    }
-    func divide(op1: Double, op2: Double) -> Double{
-        return op2/op1
-    }
-    func subtraction(op1: Double, op2: Double) -> Double{
-        return op2-op1
-    }
     func numberOperation(operate:(Double, Double) -> Double){
         if numberStack.count >= 2{
             displayValue.text = operate(numberStack.removeLast(), numberStack.removeLast()).description
         }
         enter()
     }
+    func singleNumberOperation(operate:(Double) -> Double){
+        if numberStack.count >= 1{
+            displayValue.text = operate(numberStack.removeLast()).description
+        }
+        enter()
+    }
     @IBAction func operate(sender: UIButton) {
         let operation = sender.currentTitle!
         switch operation{
-            case "+": numberOperation(add)
-            case "-": numberOperation(subtraction)
-            case "×": numberOperation(mutiply)
-            case "÷": numberOperation(divide)
+        case "+": numberOperation(){ $0 + $1 }
+        case "-": numberOperation() { $1 - $0 }
+        case "×": numberOperation() { $0 * $1 }
+        case "÷": numberOperation() { $1 / $0 }
+        case "√": singleNumberOperation(sqrt)
         default: break
         }
     }
