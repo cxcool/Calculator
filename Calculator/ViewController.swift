@@ -13,6 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var displayValue: UILabel!
     
     var isUserFirstInput = true
+    var brain = CalculatorBrain()
     
     @IBAction func digit(sender: UIButton) {
         let digit = sender.currentTitle!
@@ -27,32 +28,40 @@ class ViewController: UIViewController {
     var numberStack = [Double]()
     @IBAction func enter() {
         let displayValueDouble: Double = NSNumberFormatter().numberFromString(displayValue.text!)!.doubleValue
-        numberStack.append(displayValueDouble)
+//        numberStack.append(displayValueDouble)
+//        print(displayValueDouble)
         isUserFirstInput = true
-        print(displayValueDouble)
+        if let result = brain.pushOperand(displayValueDouble){
+            displayValue.text = result.description
+        }else{
+            displayValue.text = 0.description
+        }
+        
     }
     
-    func numberOperation(operate:(Double, Double) -> Double){
-        if numberStack.count >= 2{
-            displayValue.text = operate(numberStack.removeLast(), numberStack.removeLast()).description
-        }
-        enter()
-    }
-    func singleNumberOperation(operate:(Double) -> Double){
-        if numberStack.count >= 1{
-            displayValue.text = operate(numberStack.removeLast()).description
-        }
-        enter()
-    }
+//    func numberOperation(operate:(Double, Double) -> Double){
+//        if numberStack.count >= 2{
+//            displayValue.text = operate(numberStack.removeLast(), numberStack.removeLast()).description
+//        }
+//        enter()
+//    }
+//    func singleNumberOperation(operate:(Double) -> Double){
+//        if numberStack.count >= 1{
+//            displayValue.text = operate(numberStack.removeLast()).description
+//        }
+//        enter()
+//    }
     @IBAction func operate(sender: UIButton) {
-        let operation = sender.currentTitle!
-        switch operation{
-        case "+": numberOperation(){ $0 + $1 }
-        case "-": numberOperation() { $1 - $0 }
-        case "×": numberOperation() { $0 * $1 }
-        case "÷": numberOperation() { $1 / $0 }
-        case "√": singleNumberOperation(sqrt)
-        default: break
+        
+        if !isUserFirstInput {
+            enter()
+        }
+        if let operation = sender.currentTitle {
+            if let result = brain.performOperation(operation) {
+                displayValue.text = "\(result)"
+            }else{
+                displayValue.text = "0"
+            }
         }
     }
     
