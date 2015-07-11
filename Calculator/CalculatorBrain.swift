@@ -10,15 +10,15 @@ import Foundation
 
 class CalculatorBrain
 {
-    enum Op{
+    private enum Op{
         case operand(Double)
         case operation(String, (Double, Double) -> Double)
         case singleOperation(String , Double -> Double)
     }
     
-    var opStack = [Op]()
+    private var opStack = [Op]()
     
-    var knownOps = [String: Op]()
+    private var knownOps = [String: Op]()
     
     init(){
         knownOps["+"] = Op.operation("+"){ $0 + $1 }
@@ -28,7 +28,7 @@ class CalculatorBrain
         knownOps["√"] = Op.singleOperation("√"){ sqrt($0) }
     }
     
-    func evaluate(ops: [Op]) ->(result: Double?, remaining: [Op]){
+    private func evaluate(ops: [Op]) ->(result: Double?, remaining: [Op]){
         if !ops.isEmpty {
             var remainStack = ops
             let op = remainStack.removeLast()
@@ -54,7 +54,7 @@ class CalculatorBrain
     }
     
     func evaluate() -> Double?{
-        let (result, remainder) = evaluate(opStack)
+        let (result, _) = evaluate(opStack)
         return result
     }
     
