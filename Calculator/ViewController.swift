@@ -28,8 +28,6 @@ class ViewController: UIViewController {
     var numberStack = [Double]()
     @IBAction func enter() {
         let displayValueDouble: Double = NSNumberFormatter().numberFromString(displayValue.text!)!.doubleValue
-//        numberStack.append(displayValueDouble)
-//        print(displayValueDouble)
         isUserFirstInput = true
         if let result = brain.pushOperand(displayValueDouble){
             displayValue.text = result.description
@@ -38,19 +36,7 @@ class ViewController: UIViewController {
         }
         
     }
-    
-//    func numberOperation(operate:(Double, Double) -> Double){
-//        if numberStack.count >= 2{
-//            displayValue.text = operate(numberStack.removeLast(), numberStack.removeLast()).description
-//        }
-//        enter()
-//    }
-//    func singleNumberOperation(operate:(Double) -> Double){
-//        if numberStack.count >= 1{
-//            displayValue.text = operate(numberStack.removeLast()).description
-//        }
-//        enter()
-//    }
+
     @IBAction func operate(sender: UIButton) {
         
         if !isUserFirstInput {
